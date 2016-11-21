@@ -33,4 +33,13 @@ class index(generic.View):
         if 'message' in message:
           # Print the message to the terminal
           pprint(message)
+          post_facebook_message(message['sender']['id'], message['message']['text'])
     return HttpResponse()
+
+
+# Helper Function
+def post_facebook_message(fbid, recevied_message):
+  post_message_url = "https://graph.facebook.com/v2.6/me/messages?access_token=EAAT6SYsWaHABAO1yvU1rdu5LKtsnZAyuiwjtYyWBlbMnwC45yGrBPwPNu5eSHiIwN6C3mx3S8hFsU0HhanmuQk6vgfJa1mmEOeNjdOSvhuks2QxLp4aOstMFgT1HF5mRZAP9RSLvlvobwISRkskCZB3x24K0wUZAyZByUa4B3fAZDZD"
+  response_msg = json.dumps({"recipient":{"id":fbid}, "message":{"text":recevied_message}})
+  status = requests.post(post_message_url, headers={"Content-Type": "application/json"},data=response_msg)
+  pprint(status.json())
