@@ -51,9 +51,75 @@ class index(generic.View):
 # Helper Function
 def post_facebook_message(fbid, recevied_message):
   responses = {
-    'hey': {"recipient":{"id":fbid}, "message":{"text": "Hi! Welcome to your event. What stadium are you at today?"}},
-      'MCG': {"recipient":{"id":fbid}, "message":{"text": "Awesome! Can I have your seat number?"}},
-        'B12': {"recipient":{"id":fbid}, "message":{"text": "Great. Here are some food options near you!"}},
+    'Hey': {"recipient":{"id":fbid}, "message":{"text": "Hey Choenden! Are you at an event today? If yes, choose which stadium."}},
+    'Yes': {
+      "recipient":{
+      "id":fbid }, "message": {
+      "attachment": {
+        "type": "template",
+          "payload": {
+            "template_type": "list",
+              "elements": [
+                           {
+                           "title": "MCG",
+                           "image_url": "http://www.epicure.com.au/images/default-source/Rotator/Venue/mcg-big-desktop/mcg-big-3-desktop.jpg?sfvrsn=2&size=2600",
+                           "subtitle": "Capacity:{x}% full right now.".format(x=random.randint(20,90)),
+                           "default_action": {
+                           "type": "web_url",
+                           "url": "https://www.kfc.com.au",
+                           "messenger_extensions": True,
+                           "webview_height_ratio": "tall",
+                           "fallback_url": "https://localhost/blah"
+                           },
+                           "buttons": [
+                                       {
+                                       "title": "Enter",
+                                       "type": "web_url",
+                                       "url": "https://localhost/blah",
+                                       "messenger_extensions": True,
+                                       "webview_height_ratio": "tall",
+                                       "fallback_url": "https://localhost/blah2"
+                                       }
+                                       
+                                       ]
+                           },
+                           {
+                           "title": "Etihad Stadium",
+                           "image_url": "http://philipchun.com/wp-content/uploads/2015/06/Etihad-PB.jpg",
+                           "subtitle": "Capacity:{x}% full right now.".format(x=random.randint(20,90)),
+                           "default_action": {
+                           "type": "web_url",
+                           "url": "https://www.McDonalds.com",
+                           "messenger_extensions": True,
+                           "webview_height_ratio": "tall",
+                           "fallback_url": "https://localhost/blah"
+                           },
+                           "buttons": [
+                                       {
+                                       "title": "Enter",
+                                       "type": "web_url",
+                                       "url": "https://localhost/blah",
+                                       "messenger_extensions": True,
+                                       "webview_height_ratio": "tall",
+                                       "fallback_url": "https://localhost/blah2"
+                                       }
+                                       ]
+                           }
+                           ]
+}
+}
+  }},
+    
+    
+    
+    'MCG': {"recipient":{"id":fbid}, "message":{"text": "Awesome! Can I have your seat number?"}},
+      
+      
+      
+      'B12': {"recipient":{"id":fbid}, "message":{"text": "Great. Here are some food options near you!"}},
+    
+    
+    
     'Cool!': {
       "recipient":{
       "id":fbid }, "message": {
@@ -65,7 +131,7 @@ def post_facebook_message(fbid, recevied_message):
                            {
                            "title": "KFC",
                            "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/b/bf/KFC_logo.svg/1024px-KFC_logo.svg.png",
-                           "subtitle": "10 Piece Chicken, Fries, Beer: 20$",
+                           "subtitle": "Capacity:{x}%".format(x=random.randint(20,90)),
                            "default_action": {
                            "type": "web_url",
                            "url": "https://www.kfc.com.au",
@@ -96,7 +162,7 @@ def post_facebook_message(fbid, recevied_message):
                            {
                            "title": "McDonalds",
                            "image_url": "https://yt3.ggpht.com/-avTHbIvvjKY/AAAAAAAAAAI/AAAAAAAAAAA/GtO4B-SrWkA/s900-c-k-no-mo-rj-c0xffffff/photo.jpg",
-                           "subtitle": "Big Mac, Medium Fries, Cola: 15$",
+                           "subtitle": "Capacity:{x}%".format(x=random.randint(20,90)),
                            "default_action": {
                            "type": "web_url",
                            "url": "https://www.McDonalds.com",
@@ -124,7 +190,80 @@ def post_facebook_message(fbid, recevied_message):
                                        ]
                            }
                            ]
+}
+}
   }
+  }, 'Food options near me' : {
+    "recipient":{
+      "id":fbid }, "message": {
+      "attachment": {
+        "type": "template",
+          "payload": {
+            "template_type": "generic",
+              "elements": [
+                           {
+                           "title": "KFC",
+                           "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/b/bf/KFC_logo.svg/1024px-KFC_logo.svg.png",
+                           "subtitle": "Capacity:{x}%".format(x=random.randint(20,90)),
+                           "default_action": {
+                           "type": "web_url",
+                           "url": "https://www.kfc.com.au",
+                           "messenger_extensions": True,
+                           "webview_height_ratio": "tall",
+                           "fallback_url": "https://localhost/blah"
+                           },
+                           "buttons": [
+                                       {
+                                       "title": "Purchase",
+                                       "type": "web_url",
+                                       "url": "https://localhost/blah",
+                                       "messenger_extensions": True,
+                                       "webview_height_ratio": "tall",
+                                       "fallback_url": "https://localhost/blah2"
+                                       },
+                                       {
+                                       "title": "View More",
+                                       "type": "web_url",
+                                       "url": "https://localhost/blah",
+                                       "messenger_extensions": True,
+                                       "webview_height_ratio": "tall",
+                                       "fallback_url": "https://localhost/blah2"
+                                       }
+                                       
+                                       ]
+                           },
+                           {
+                           "title": "McDonalds",
+                           "image_url": "https://yt3.ggpht.com/-avTHbIvvjKY/AAAAAAAAAAI/AAAAAAAAAAA/GtO4B-SrWkA/s900-c-k-no-mo-rj-c0xffffff/photo.jpg",
+                           "subtitle": "Capacity:{x}%".format(x=random.randint(20,90)),
+                           "default_action": {
+                           "type": "web_url",
+                           "url": "https://www.McDonalds.com",
+                           "messenger_extensions": True,
+                           "webview_height_ratio": "tall",
+                           "fallback_url": "https://localhost/blah"
+                           },
+                           "buttons": [
+                                       {
+                                       "title": "Purchase",
+                                       "type": "web_url",
+                                       "url": "https://localhost/blah",
+                                       "messenger_extensions": True,
+                                       "webview_height_ratio": "tall",
+                                       "fallback_url": "https://localhost/blah2"
+                                       },
+                                       {
+                                       "title": "View More",
+                                       "type": "web_url",
+                                       "url": "https://localhost/blah",
+                                       "messenger_extensions": True,
+                                       "webview_height_ratio": "tall",
+                                       "fallback_url": "https://localhost/blah2"
+                                       }
+                                       ]
+                           }
+                           ]
+}
 }
   }
   }
