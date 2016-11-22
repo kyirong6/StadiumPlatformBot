@@ -34,96 +34,122 @@ class index(generic.View):
         # This might be delivery, optin, postback for other events
         if 'message' in message:
           # Print the message to the terminal
-          pprint(message)
-          post_facebook_message(message['sender']['id'], "blah")
-    return HttpResponse()
+          pprint("1----------------------\n")
+          # pprint(message)
+          if 'is_echo' in message['message']:
+            continue
+        
+          if 'text' not in message['message']:
+            post_facebook_message(message['sender']['id'], 'not found')
+          else:
+            pprint("2----------------------\n")
+              post_facebook_message(message['sender']['id'], message['message']['text'])
+  return HttpResponse('something')
+
 
 
 # Helper Function
 def post_facebook_message(fbid, recevied_message):
   responses = {
-    'hey': "Hey! How are you?",
-      'hello': "Hey! How are you?"   ,
-        '55': "Awesome! Here are some options near you."
-    }
-
-# Remove all punctuations, lower case the text and split it based on space
-tokens = re.sub(r"[^a-zA-Z0-9\s]",' ',recevied_message).lower().split()
-  txt_back = ''
-  for token in tokens:
-    if token in responses:
-      txt_back = responses[token]
-      break
-if not responses:
-  txt_back = "I didn't understand! Sorry!"
+    'hey': {"recipient":{"id":fbid}, "message":{"text": "Hi! Welcome to your event. What stadium are you at today?"}},
+      'MCG': {"recipient":{"id":fbid}, "message":{"text": "Awesome! Can I have your seat number?"}},
+        'B12': {"recipient":{"id":fbid}, "message":{"text": "Great. Here are some food options near you!"}},
+    'Cool!': {
+      "recipient":{
+      "id":fbid }, "message": {
+      "attachment": {
+        "type": "template",
+          "payload": {
+            "template_type": "generic",
+              "elements": [
+                           {
+                           "title": "KFC",
+                           "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/b/bf/KFC_logo.svg/1024px-KFC_logo.svg.png",
+                           "subtitle": "10 Piece Chicken, Fries, Beer: 20$",
+                           "default_action": {
+                           "type": "web_url",
+                           "url": "https://www.kfc.com.au",
+                           "messenger_extensions": True,
+                           "webview_height_ratio": "tall",
+                           "fallback_url": "https://localhost/blah"
+                           },
+                           "buttons": [
+                                       {
+                                       "title": "Purchase",
+                                       "type": "web_url",
+                                       "url": "https://localhost/blah",
+                                       "messenger_extensions": True,
+                                       "webview_height_ratio": "tall",
+                                       "fallback_url": "https://localhost/blah2"
+                                       },
+                                       {
+                                       "title": "View More",
+                                       "type": "web_url",
+                                       "url": "https://localhost/blah",
+                                       "messenger_extensions": True,
+                                       "webview_height_ratio": "tall",
+                                       "fallback_url": "https://localhost/blah2"
+                                       }
+                                       
+                                       ]
+                           },
+                           {
+                           "title": "McDonalds",
+                           "image_url": "https://yt3.ggpht.com/-avTHbIvvjKY/AAAAAAAAAAI/AAAAAAAAAAA/GtO4B-SrWkA/s900-c-k-no-mo-rj-c0xffffff/photo.jpg",
+                           "subtitle": "Big Mac, Medium Fries, Cola: 15$",
+                           "default_action": {
+                           "type": "web_url",
+                           "url": "https://www.McDonalds.com",
+                           "messenger_extensions": True,
+                           "webview_height_ratio": "tall",
+                           "fallback_url": "https://localhost/blah"
+                           },
+                           "buttons": [
+                                       {
+                                       "title": "Purchase",
+                                       "type": "web_url",
+                                       "url": "https://localhost/blah",
+                                       "messenger_extensions": True,
+                                       "webview_height_ratio": "tall",
+                                       "fallback_url": "https://localhost/blah2"
+                                       },
+                                       {
+                                       "title": "View More",
+                                       "type": "web_url",
+                                       "url": "https://localhost/blah",
+                                       "messenger_extensions": True,
+                                       "webview_height_ratio": "tall",
+                                       "fallback_url": "https://localhost/blah2"
+                                       }
+                                       ]
+                           }
+                           ]
+  }
+}
+  }
+  }
+  }
+  
+  # Remove all punctuations, lower case the text and split it based on space
+  
+  if recevied_message in responses:
+    txt_back = responses[recevied_message]
+  else:
+    txt_back = {"recipient":{"id":fbid}, "message":{"text": "I didin't understand you. Sorry!"}}
   post_message_url = "https://graph.facebook.com/v2.6/me/messages?access_token=EAAT6SYsWaHABAO1yvU1rdu5LKtsnZAyuiwjtYyWBlbMnwC45yGrBPwPNu5eSHiIwN6C3mx3S8hFsU0HhanmuQk6vgfJa1mmEOeNjdOSvhuks2QxLp4aOstMFgT1HF5mRZAP9RSLvlvobwISRkskCZB3x24K0wUZAyZByUa4B3fAZDZD"
+
+#curl -X POST -H "Content-Type: application/json" -d '{
+#"setting_type" : "domain_whitelisting",
+#  "whitelisted_domains" : ["https://localhost"],
+#  "domain_action_type": "add"
+#}' "https://graph.facebook.com/v2.6/me/thread_settings?access_token=EAAT6SYsWaHABAO1yvU1rdu5LKtsnZAyuiwjtYyWBlbMnwC45yGrBPwPNu5eSHiIwN6C3mx3S8hFsU0HhanmuQk6vgfJa1mmEOeNjdOSvhuks2QxLp4aOstMFgT1HF5mRZAP9RSLvlvobwISRkskCZB3x24K0wUZAyZByUa4B3fAZDZD"
+
+#response_msg = json.dumps({"recipient":{"id":fbid}, "message":{"text":txt_back}})
+#  print(fbid)
+pprint("3----------------------\n")
+  #  print(txt_back)
+  response_msg = json.dumps(txt_back)
   
-  #curl -X POST -H "Content-Type: application/json" -d '{
-  #"setting_type" : "domain_whitelisting",
-  #  "whitelisted_domains" : ["https://localhost"],
-  #  "domain_action_type": "add"
-  #}' "https://graph.facebook.com/v2.6/me/thread_settings?access_token=EAAT6SYsWaHABAO1yvU1rdu5LKtsnZAyuiwjtYyWBlbMnwC45yGrBPwPNu5eSHiIwN6C3mx3S8hFsU0HhanmuQk6vgfJa1mmEOeNjdOSvhuks2QxLp4aOstMFgT1HF5mRZAP9RSLvlvobwISRkskCZB3x24K0wUZAyZByUa4B3fAZDZD"
-  
-  #response_msg = json.dumps({"recipient":{"id":fbid}, "message":{"text":txt_back}})
-  print(fbid)
-  response_msg = json.dumps({
-                            "recipient":{
-                            "id":fbid }, "message": {
-                            "attachment": {
-                            "type": "template",
-                            "payload": {
-                            "template_type": "list",
-                            "elements": [
-                                         {
-                                         "title": "Classic T-Shirt Collection",
-                                         "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/b/bf/KFC_logo.svg/1024px-KFC_logo.svg.png",
-                                         "subtitle": "See all our colors",
-                                         "default_action": {
-                                         "type": "web_url",
-                                         "url": "https://localhost/blah",
-                                         "messenger_extensions": True,
-                                         "webview_height_ratio": "tall",
-                                         "fallback_url": "https://localhost/blah"
-                                         },
-                                         "buttons": [
-                                                     {
-                                                     "title": "View",
-                                                     "type": "web_url",
-                                                     "url": "https://localhost/blah",
-                                                     "messenger_extensions": True,
-                                                     "webview_height_ratio": "tall",
-                                                     "fallback_url": "https://localhost/blah2"
-                                                     }
-                                                     ]
-                                         },
-                                         {
-                                         "title": "Classic T-Shirt Collection",
-                                         "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/b/bf/KFC_logo.svg/1024px-KFC_logo.svg.png",
-                                         "subtitle": "See all our colors",
-                                         "default_action": {
-                                         "type": "web_url",
-                                         "url": "https://localhost/blah",
-                                         "messenger_extensions": True,
-                                         "webview_height_ratio": "tall",
-                                         "fallback_url": "https://localhost/blah"
-                                         },
-                                         "buttons": [
-                                                     {
-                                                     "title": "View",
-                                                     "type": "web_url",
-                                                     "url": "https://localhost/blah",
-                                                     "messenger_extensions": True,
-                                                     "webview_height_ratio": "tall",
-                                                     "fallback_url": "https://localhost/blah2"
-                                                     }
-                                                     ]
-                                         }
-                                         ]  
-                            }
-                            }
-                            }
-                            
-                            })
-                            
   status = requests.post(post_message_url, headers={"Content-Type": "application/json"},data=response_msg)
-#  pprint(status.json())
+  pprint("4----------------------\n")
+  pprint(status.json())
