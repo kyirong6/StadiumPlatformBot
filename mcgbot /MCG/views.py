@@ -9,6 +9,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 class index(generic.View):
+  
+  
   def get(self, request, *args, **kwargs):
     if self.request.GET['hub.verify_token'] == '1218':
       return HttpResponse(self.request.GET['hub.challenge'])
@@ -33,13 +35,95 @@ class index(generic.View):
         if 'message' in message:
           # Print the message to the terminal
           pprint(message)
-          post_facebook_message(message['sender']['id'], message['message']['text'])
+          post_facebook_message(message['sender']['id'], "blah")
     return HttpResponse()
 
 
 # Helper Function
 def post_facebook_message(fbid, recevied_message):
+  responses = {
+    'hey': "Hey! How are you?",
+      'hello': "Hey! How are you?"   ,
+        '55': "Awesome! Here are some options near you."
+    }
+
+# Remove all punctuations, lower case the text and split it based on space
+tokens = re.sub(r"[^a-zA-Z0-9\s]",' ',recevied_message).lower().split()
+  txt_back = ''
+  for token in tokens:
+    if token in responses:
+      txt_back = responses[token]
+      break
+if not responses:
+  txt_back = "I didn't understand! Sorry!"
   post_message_url = "https://graph.facebook.com/v2.6/me/messages?access_token=EAAT6SYsWaHABAO1yvU1rdu5LKtsnZAyuiwjtYyWBlbMnwC45yGrBPwPNu5eSHiIwN6C3mx3S8hFsU0HhanmuQk6vgfJa1mmEOeNjdOSvhuks2QxLp4aOstMFgT1HF5mRZAP9RSLvlvobwISRkskCZB3x24K0wUZAyZByUa4B3fAZDZD"
-  response_msg = json.dumps({"recipient":{"id":fbid}, "message":{"text":recevied_message}})
+  
+  #curl -X POST -H "Content-Type: application/json" -d '{
+  #"setting_type" : "domain_whitelisting",
+  #  "whitelisted_domains" : ["https://localhost"],
+  #  "domain_action_type": "add"
+  #}' "https://graph.facebook.com/v2.6/me/thread_settings?access_token=EAAT6SYsWaHABAO1yvU1rdu5LKtsnZAyuiwjtYyWBlbMnwC45yGrBPwPNu5eSHiIwN6C3mx3S8hFsU0HhanmuQk6vgfJa1mmEOeNjdOSvhuks2QxLp4aOstMFgT1HF5mRZAP9RSLvlvobwISRkskCZB3x24K0wUZAyZByUa4B3fAZDZD"
+  
+  #response_msg = json.dumps({"recipient":{"id":fbid}, "message":{"text":txt_back}})
+  print(fbid)
+  response_msg = json.dumps({
+                            "recipient":{
+                            "id":fbid }, "message": {
+                            "attachment": {
+                            "type": "template",
+                            "payload": {
+                            "template_type": "list",
+                            "elements": [
+                                         {
+                                         "title": "Classic T-Shirt Collection",
+                                         "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/b/bf/KFC_logo.svg/1024px-KFC_logo.svg.png",
+                                         "subtitle": "See all our colors",
+                                         "default_action": {
+                                         "type": "web_url",
+                                         "url": "https://localhost/blah",
+                                         "messenger_extensions": True,
+                                         "webview_height_ratio": "tall",
+                                         "fallback_url": "https://localhost/blah"
+                                         },
+                                         "buttons": [
+                                                     {
+                                                     "title": "View",
+                                                     "type": "web_url",
+                                                     "url": "https://localhost/blah",
+                                                     "messenger_extensions": True,
+                                                     "webview_height_ratio": "tall",
+                                                     "fallback_url": "https://localhost/blah2"
+                                                     }
+                                                     ]
+                                         },
+                                         {
+                                         "title": "Classic T-Shirt Collection",
+                                         "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/b/bf/KFC_logo.svg/1024px-KFC_logo.svg.png",
+                                         "subtitle": "See all our colors",
+                                         "default_action": {
+                                         "type": "web_url",
+                                         "url": "https://localhost/blah",
+                                         "messenger_extensions": True,
+                                         "webview_height_ratio": "tall",
+                                         "fallback_url": "https://localhost/blah"
+                                         },
+                                         "buttons": [
+                                                     {
+                                                     "title": "View",
+                                                     "type": "web_url",
+                                                     "url": "https://localhost/blah",
+                                                     "messenger_extensions": True,
+                                                     "webview_height_ratio": "tall",
+                                                     "fallback_url": "https://localhost/blah2"
+                                                     }
+                                                     ]
+                                         }
+                                         ]  
+                            }
+                            }
+                            }
+                            
+                            })
+                            
   status = requests.post(post_message_url, headers={"Content-Type": "application/json"},data=response_msg)
-  pprint(status.json())
+#  pprint(status.json())
